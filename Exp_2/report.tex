@@ -1,0 +1,74 @@
+\documentclass{article}
+\usepackage{graphicx} % For including images
+\usepackage{titling}  % For custom title page
+\usepackage{circuitikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs,tabu}
+\usepackage[all, cmtip]{xy}
+\newcommand{\ohm}{\Omega}
+% Set up title and author
+\title{Experiment 1: Basic Filter Design}
+\author{Samyak Sheersh,Souhardya Bose,Aryam Shankar}
+\date{20 August 2024}
+\newcommand{\subtitle}[1]{%
+  \posttitle{%
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
+
+\begin{document}
+
+% Custom title page
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.2\textwidth]{KGP_logo.png}\par\vspace{1cm}
+    {\scshape\LARGE Department of Electronics and Electrical Communication Engineering, IIT Kharagpur\par}
+    \vspace{1cm}
+    {\huge\bfseries Experiment 2: Switching Modulator\par}
+    \vspace{1.5cm}
+    {\Large\itshape Samyak Sheersh,Souhardya Bose,Aryam Shankar\par}
+    \vfill
+    % Identifying information at the bottom
+    {\large Roll Numbers: 22EC30045, 21EE10097, 22EC3FP37\par}
+    {\large Group Number: 12\par}
+    \vfill
+    {\large 06 August 2024\par}
+\end{titlepage}
+
+
+\section{Introduction}
+We want to a transmit a message signal $m(t)$ using a carrier signal $c(t)$. We set up the following to generate the final modulated signal, and the following block diagram represents it:
+\[\xymatrix{
+    m(t) \ar[r] & *++[F]{\Sigma} \ar[r]|{v_1(t)} & *++[F]{\text{Switching diode}} \ar[r]|{v_2(t)} & *++[F]{\text{Band-pass filter}} \ar[r] & v_3(t)\\
+& c(t)=A_c \cos(2\pi f_c t) \ar[u]
+}\]
+
+Here $$v_1(t) = m(t)+A_c \cos(2\pi f_c t)$$
+
+where $A_c >|m(t)|$
+
+
+Due to the diode:
+\begin{equation}
+    v_2(t)=\begin{cases}
+        v_1(t),& \text{if } c(t) > 0\\
+        0, & \text{if } c(t) < 0
+    \end{cases}
+\end{equation}
+
+
+which means that the expression can be represented as:
+\begin{equation}
+    v_2(t)=v_1(t)x(t)
+\end{equation}
+where $x(t)$ is a square wave which follows $\cos(2\pi f_c t)$
+
+The Fourier decomposition can be written as 
+\begin{equation}
+  x(t) = \frac{1}{2}+\frac{2}{\pi}\sum_{n=1}^\infty \Bigg(\frac{(-1)^{n-1}}{2n-1}\cos(2\pi(2n-1)f_c t)\Bigg)
+\end{equation}
+
+\end{document}
+

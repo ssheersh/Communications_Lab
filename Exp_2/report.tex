@@ -39,6 +39,8 @@
 
 
 \section{Introduction}
+
+\subsection{Task 1}
 We want to a transmit a message signal $m(t)$ using a carrier signal $c(t)$. We set up the following to generate the final modulated signal, and the following block diagram represents it:
 \[\xymatrix{
     m(t) \ar[r] & *++[F]{\Sigma} \ar[r]|{v_1(t)} & *++[F]{\text{Switching diode}} \ar[r]|{v_2(t)} & *++[F]{\text{Band-pass filter}} \ar[r] & v_3(t)\\
@@ -49,7 +51,30 @@ Here $$v_1(t) = m(t)+A_c \cos(2\pi f_c t)$$
 
 where $A_c >|m(t)|$
 
+The signal $v_3(t)$ is the final modulated signal. 
+\vspace{2mm}
 
+Here for $c(t)$: $A_c=3V$ i.e. $6V_{pp}$ and $f_c=8kHz$
+
+
+And for $m(t)$: $A_c=1V$ i.e. $2V_{pp}$ and $f_m=1kHz$
+
+\subsection{Task 2}
+To demodulate and find out the original signal, we will design an envelope detector, with respect to the carrier and the message frequencies. Further we will pass the output through an appropriate low pass filter to smoothen output 
+
+\section{Instruments and Materials Used}
+\begin{enumerate}
+  \item RIGOL Signal Generator
+  \item ScientiFIC SMO10C Digital Signal Oscilloscope
+  \item +12V, -12V DC source and ground
+  \item Resistors
+  \item Capacitors
+  \item Diodes
+  \item Breadboard
+  \item Connecting wires
+\end{enumerate}
+
+\section{Theory}
 Due to the diode:
 \begin{equation}
     v_2(t)=\begin{cases}
@@ -69,6 +94,72 @@ The Fourier decomposition can be written as
 \begin{equation}
   x(t) = \frac{1}{2}+\frac{2}{\pi}\sum_{n=1}^\infty \Bigg(\frac{(-1)^{n-1}}{2n-1}\cos(2\pi(2n-1)f_c t)\Bigg)
 \end{equation}
+
+\section{Calculations and Circuit Diagrams}
+\subsection{Task 1: Modulating circuit}
+For the adder, since we require $v_1(t)=m(t)+A_c \cos(2\pi f_c t)$, we use the op-amp as an adder with
+$$
+R_1=R_2=R_3=R_f=1k\ohm
+$$
+\begin{figure}[!ht]
+  \begin{center}
+    \caption{Required circuit for addition}
+    \begin{circuitikz}
+      \draw (1.75,13.25) to[R,l={ \normalsize $R_2=1k\ohm$}] (5.25,13.25);
+      \draw (1.75,12) to[R,l={ \normalsize $R_1=1k\ohm$}] (5.25,12);
+      \draw (5.25,13.25) to[short] (5.25,12);
+      \draw (6.75,12.25) node[op amp,scale=1, yscale=-1 ] (opamp2) {};
+      \draw (opamp2.+) to[short] (5.25,12.75);
+      \draw  (opamp2.-) to[short] (5.25,11.75);
+      \draw (7.95,12.25) to[short](8.25,12.25);
+      \draw (5.25,11.75) to[short] (5.25,9.75);
+      \draw (5.25,9.75) to[R,l={ \normalsize $R_3=1k\ohm$}] (5.25,7.75);
+      \draw (5.25,7.75) to (5.25,7.5) node[ground]{};
+      \draw (8,12.25) to[short] (11.75,12.25);
+      \draw (9.5,12.25) to[short] (9.5,10.25);
+      \draw (9.5,10.25) to[R,l={ \normalsize $R_f=1k\ohm$}] (5.25,10.25);
+      \node at (5.25,10.25) [circ] {};
+      \node at (5.25,12.75) [circ] {};
+      \draw (5.25,7.75) to (5.25,7.5) node[ground]{};
+      \draw (11.25,12.25) to[short, -o] (11.75,12.25) ;
+      \node at (9.5,12.25) [circ] {};
+      \node [font=\normalsize] at (1,13.5) {$m(t)$};
+      \node [font=\normalsize] at (1,12) {$c(t)$};
+      \node [font=\normalsize] at (12.25,12.5) {$v_1(t)$};
+    \end{circuitikz}
+  \end{center}
+  \label{fig:opamp-addition}
+\end{figure}
+\newpage
+After the added signal $v_1(t)$ we design the following band pass filter:
+\begin{figure}[!ht]
+  \caption{Band pass filter to remove higher frequencies}
+\centering
+\resizebox{1\textwidth}{!}{%
+\begin{circuitikz}
+\tikzstyle{every node}=[font=\normalsize]
+\draw (1.5,12.5) to[D] (3.5,12.5);
+\draw (3.5,12.5) to[R,l={ \normalsize 2.63k$\Omega$}] (6.25,12.5);
+\draw (6.25,12.5) to[C,l={ \normalsize 5.1nF}] (6.25,10);
+\draw (6.25,12.5) to[C,l={ \normalsize 10.02nF}] (9,12.5);
+\draw (9,12.5) to[R,l={ \normalsize 1.8k$\Omega$}] (9,10);
+\draw (3.5,10) to[short] (9,10);
+\draw (3.5,12.5) to[R,l={ \normalsize R=100k$\Omega$}] (3.5,10);
+\draw (6.25,10) to (6.25,9.5) node[ground]{};
+\draw (9,12.5) to[short, -o] (10.25,12.5) ;
+\draw (9,10) to[short, -o] (10.25,10) ;
+\node [font=\normalsize] at (1,13) {$v_1(t)$};
+\draw [<->, >=Stealth] (3.75,12.25) -- (3.75,10.25);
+\node [font=\normalsize] at (2.75,11.25) {$v_2(t)$};
+\draw [<->, >=Stealth] (10.75,12.25) -- (10.75,10.25);
+\node [font=\normalsize] at (11.25,11.25) {$v_3(t)$};
+\end{circuitikz}
+}%
+\label{fig:bpf}
+\end{figure}
+
+where $f_L=4.4kHz$ and $f_H=12.5kHz$, such that unwanted high frequency do not result in power wastage
+
 
 \end{document}
 
